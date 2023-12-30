@@ -1,0 +1,12 @@
+let test = fn(a, b) {
+    if (a < b) {
+        return a + b;
+    } else {
+        return a;
+    }
+};
+
+let a = 4;
+a = 23;
+
+print(test(1, 2));
