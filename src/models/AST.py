@@ -328,7 +328,6 @@ class PrefixExpression(Expression):
         return {
             "type": self.type(),
             "prefix_token": str(self.token),
-            "left_node": self.left_node.json(),
             "operator": self.operator,
             "right_node": self.right_node.json()
         }
@@ -397,7 +396,7 @@ class IfExpression(Expression):
             "type": self.type(),
             "condition": self.condition.json(),
             "consequence": self.consequence.json(),
-            "alternative": self.alternative.json()
+            "alternative": self.alternative.json() if self.alternative is not None else None
         }
     
 class CallExpression(Expression):

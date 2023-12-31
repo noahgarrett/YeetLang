@@ -1,10 +1,9 @@
 bruh main() {
-    lit a be 25 rn
+    lit a be 5 rn
 
-    while a < 50 {
-        a = a + 1;
-        printf("yeet: %i\n", a);
+    if a == 5 {
+        printf("yes") rn
     }
 
-    pause a rn
+    pause 0;
 }

@@ -1,6 +1,6 @@
 from models.AST import Program, Node, Expression, Statement
 from models.AST import LetStatement, ExpressionStatement, BlockStatement, ReturnStatement, FunctionStatement, AssignStatement
-from models.AST import WhileStatement
+from models.AST import WhileStatement, IfExpression
 from models.AST import InfixExpression, PrefixExpression, CallExpression
 from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral, FunctionLiteral
 
@@ -64,6 +64,8 @@ class Compiler:
                 self.__visit_infix_expression(node)
             case "CallExpression":
                 self.__visit_call_expression(node)
+            case "IfExpression":
+                self.__visit_if_expression(node)
 
     def __initialize_builtins(self) -> ir.Function:
         def __init_print() -> ir.Function:
@@ -124,7 +126,7 @@ class Compiler:
 
         # Keep track of the types for each parameter
         # TODO: ALLOW MORE PARAM TYPES OTHER THAN INT
-        param_types: list[ir.Type] = [self.type_map['int'] for p in params]
+        param_types: list[ir.Type] = [self.type_map['float'] for p in params]
 
         # TODO: Function's return type (ALLOW MORE RETURN TYPES FROM FUNCTIONS, RN ITS JUST INTS)
         return_type: ir.Type = self.type_map['void']
@@ -240,6 +242,18 @@ class Compiler:
                 case '<':
                     value = self.builder.fcmp_ordered('<', left_value, right_value)
                     Type = ir.IntType(1)
+                case '<=':
+                    value = self.builder.fcmp_ordered('<=', left_value, right_value)
+                    Type = ir.IntType(1)
+                case '>':
+                    value = self.builder.fcmp_ordered('>', left_value, right_value)
+                    Type = ir.IntType(1)
+                case '>=':
+                    value = self.builder.fcmp_ordered('>=', left_value, right_value)
+                    Type = ir.IntType(1)
+                case '==':
+                    value = self.builder.fcmp_ordered('==', left_value, right_value)
+                    Type = ir.IntType(1)
         elif isinstance(right_type, ir.IntType) and isinstance(left_type, ir.IntType):
             Type = ir.IntType(32)
             match operator:
@@ -254,6 +268,25 @@ class Compiler:
                 case '<':
                     value = self.builder.icmp_signed('<', left_value, right_value)
                     Type = ir.IntType(1)
+                case '==':
+                    value = self.builder.icmp_signed('==', left_value, right_value)
+                    Type = ir.IntType(1)
+        
+        return value, Type
+    
+    def __visit_prefix_expression(self, node: PrefixExpression) -> tuple:
+        operator: str = node.operator
+        right_node = node.right_node
+
+        right_value, right_type = self.__resolve_value(right_node)
+
+        Type = None
+        value = None
+        if isinstance(right_type, ir.FloatType):
+            Type = ir.FloatType()
+            match operator:
+                case '-':
+                    value = self.builder.fmul(right_value, ir.Constant(ir.FloatType(), -1.0))
         
         return value, Type
     
@@ -279,6 +312,35 @@ class Compiler:
                 ret = self.builder.call(func, args)
         
         return ret, ret_type
+    
+    def __visit_if_expression(self, node: IfExpression) -> None:
+        condition = node.condition
+        consequence = node.consequence
+        alternative = node.alternative
+
+        test, Type = self.__resolve_value(condition)
+
+        # If there is no else block
+        if alternative is None:
+            with self.builder.if_then(test):
+                # Runs this if true
+                self.compile(consequence)
+        else:
+            with self.builder.if_else(test) as (true, otherwise):
+                # Creating a condition branch
+                #      condition
+                #        / \
+                #     true  false
+                #       /   \
+                #      /     \
+                # if block  else block
+                with true:
+                    # Runs this if the condition is true
+                    self.compile(consequence)
+
+                with otherwise:
+                    # Runs this if the condition is false
+                    self.compile(alternative)
     # endregion
         
     # region Helper Methods
@@ -310,6 +372,8 @@ class Compiler:
             # Expression Values
             case "InfixExpression":
                 return self.__visit_infix_expression(node)
+            case "PrefixExpression":
+                return self.__visit_prefix_expression(node)
             case "CallExpression":
                 return self.__visit_call_expression(node)
 

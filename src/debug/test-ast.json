@@ -6,21 +6,56 @@
                "type": "FunctionStatement",
                "name": {
                   "type": "IdentifierLiteral",
-                  "value": "main"
+                  "value": "in_mandelbrot"
                },
-               "parameters": [],
+               "parameters": [
+                  {
+                     "type": "IdentifierLiteral",
+                     "value": "xP"
+                  },
+                  {
+                     "type": "IdentifierLiteral",
+                     "value": "yP"
+                  },
+                  {
+                     "type": "IdentifierLiteral",
+                     "value": "n"
+                  }
+               ],
                "body": {
                   "type": "BlockStatement",
                   "statements": [
                      {
-                        "token": "lit",
+                        "token": "let",
                         "name": {
                            "type": "IdentifierLiteral",
-                           "value": "a"
+                           "value": "x"
                         },
                         "value": {
-                           "type": "IntegerLiteral",
-                           "value": 25
+                           "type": "FloatLiteral",
+                           "value": 0.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "y"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 0.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "xtemp"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 0.0
                         }
                      },
                      {
@@ -29,12 +64,12 @@
                            "type": "InfixExpression",
                            "left_node": {
                               "type": "IdentifierLiteral",
-                              "value": "a"
+                              "value": "n"
                            },
-                           "operator": "<",
+                           "operator": ">",
                            "right_node": {
-                              "type": "IntegerLiteral",
-                              "value": 50
+                              "type": "FloatLiteral",
+                              "value": 0.0
                            }
                         },
                         "body": {
@@ -44,19 +79,495 @@
                                  "type": "AssignStatement",
                                  "identifier": {
                                     "type": "IdentifierLiteral",
-                                    "value": "a"
+                                    "value": "xtemp"
+                                 },
+                                 "value": {
+                                    "type": "InfixExpression",
+                                    "left_node": {
+                                       "type": "InfixExpression",
+                                       "left_node": {
+                                          "type": "InfixExpression",
+                                          "left_node": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "x"
+                                          },
+                                          "operator": "*",
+                                          "right_node": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "x"
+                                          }
+                                       },
+                                       "operator": "-",
+                                       "right_node": {
+                                          "type": "InfixExpression",
+                                          "left_node": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "y"
+                                          },
+                                          "operator": "*",
+                                          "right_node": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "y"
+                                          }
+                                       }
+                                    },
+                                    "operator": "+",
+                                    "right_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "xP"
+                                    }
+                                 }
+                              },
+                              {
+                                 "type": "AssignStatement",
+                                 "identifier": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "y"
+                                 },
+                                 "value": {
+                                    "type": "InfixExpression",
+                                    "left_node": {
+                                       "type": "InfixExpression",
+                                       "left_node": {
+                                          "type": "InfixExpression",
+                                          "left_node": {
+                                             "type": "FloatLiteral",
+                                             "value": 2.0
+                                          },
+                                          "operator": "*",
+                                          "right_node": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "x"
+                                          }
+                                       },
+                                       "operator": "*",
+                                       "right_node": {
+                                          "type": "IdentifierLiteral",
+                                          "value": "y"
+                                       }
+                                    },
+                                    "operator": "+",
+                                    "right_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "yP"
+                                    }
+                                 }
+                              },
+                              {
+                                 "type": "AssignStatement",
+                                 "identifier": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "x"
+                                 },
+                                 "value": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "xtemp"
+                                 }
+                              },
+                              {
+                                 "type": "AssignStatement",
+                                 "identifier": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "n"
                                  },
                                  "value": {
                                     "type": "InfixExpression",
                                     "left_node": {
                                        "type": "IdentifierLiteral",
-                                       "value": "a"
+                                       "value": "n"
                                     },
-                                    "operator": "+",
+                                    "operator": "-",
                                     "right_node": {
-                                       "type": "IntegerLiteral",
-                                       "value": 1
+                                       "type": "FloatLiteral",
+                                       "value": 1.0
                                     }
+                                 }
+                              },
+                              {
+                                 "type": "ExpressionStatement",
+                                 "expr": {
+                                    "type": "IfExpression",
+                                    "condition": {
+                                       "type": "InfixExpression",
+                                       "left_node": {
+                                          "type": "InfixExpression",
+                                          "left_node": {
+                                             "type": "InfixExpression",
+                                             "left_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "x"
+                                             },
+                                             "operator": "*",
+                                             "right_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "x"
+                                             }
+                                          },
+                                          "operator": "+",
+                                          "right_node": {
+                                             "type": "InfixExpression",
+                                             "left_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "y"
+                                             },
+                                             "operator": "*",
+                                             "right_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "y"
+                                             }
+                                          }
+                                       },
+                                       "operator": ">",
+                                       "right_node": {
+                                          "type": "FloatLiteral",
+                                          "value": 4.0
+                                       }
+                                    },
+                                    "consequence": {
+                                       "type": "BlockStatement",
+                                       "statements": [
+                                          {
+                                             "type": "ReturnStatement",
+                                             "return_value": {
+                                                "type": "IntegerLiteral",
+                                                "value": 0
+                                             }
+                                          }
+                                       ]
+                                    },
+                                    "alternative": null
+                                 }
+                              }
+                           ]
+                        }
+                     },
+                     {
+                        "type": "ReturnStatement",
+                        "return_value": {
+                           "type": "IntegerLiteral",
+                           "value": 1
+                        }
+                     }
+                  ]
+               }
+            }
+         },
+         {
+            "FunctionStatement": {
+               "type": "FunctionStatement",
+               "name": {
+                  "type": "IdentifierLiteral",
+                  "value": "mandel"
+               },
+               "parameters": [],
+               "body": {
+                  "type": "BlockStatement",
+                  "statements": [
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "xmin"
+                        },
+                        "value": {
+                           "type": "PrefixExpression",
+                           "prefix_token": "[TokenType.MINUS:-]",
+                           "operator": "-",
+                           "right_node": {
+                              "type": "FloatLiteral",
+                              "value": 2.0
+                           }
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "xmax"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 1.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "ymin"
+                        },
+                        "value": {
+                           "type": "PrefixExpression",
+                           "prefix_token": "[TokenType.MINUS:-]",
+                           "operator": "-",
+                           "right_node": {
+                              "type": "FloatLiteral",
+                              "value": 1.5
+                           }
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "ymax"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 1.5
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "width"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 80.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "height"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 40.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "threshold"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 1000.0
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "dx"
+                        },
+                        "value": {
+                           "type": "InfixExpression",
+                           "left_node": {
+                              "type": "InfixExpression",
+                              "left_node": {
+                                 "type": "IdentifierLiteral",
+                                 "value": "xmax"
+                              },
+                              "operator": "-",
+                              "right_node": {
+                                 "type": "IdentifierLiteral",
+                                 "value": "xmin"
+                              }
+                           },
+                           "operator": "/",
+                           "right_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "width"
+                           }
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "dy"
+                        },
+                        "value": {
+                           "type": "InfixExpression",
+                           "left_node": {
+                              "type": "InfixExpression",
+                              "left_node": {
+                                 "type": "IdentifierLiteral",
+                                 "value": "ymax"
+                              },
+                              "operator": "-",
+                              "right_node": {
+                                 "type": "IdentifierLiteral",
+                                 "value": "ymin"
+                              }
+                           },
+                           "operator": "/",
+                           "right_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "height"
+                           }
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "y"
+                        },
+                        "value": {
+                           "type": "IdentifierLiteral",
+                           "value": "ymax"
+                        }
+                     },
+                     {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "x"
+                        },
+                        "value": {
+                           "type": "FloatLiteral",
+                           "value": 0.0
+                        }
+                     },
+                     {
+                        "type": "WhileStatement",
+                        "condition": {
+                           "type": "InfixExpression",
+                           "left_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "y"
+                           },
+                           "operator": ">=",
+                           "right_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "ymin"
+                           }
+                        },
+                        "body": {
+                           "type": "BlockStatement",
+                           "statements": [
+                              {
+                                 "type": "AssignStatement",
+                                 "identifier": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "x"
+                                 },
+                                 "value": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "xmin"
+                                 }
+                              },
+                              {
+                                 "type": "WhileStatement",
+                                 "condition": {
+                                    "type": "InfixExpression",
+                                    "left_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "x"
+                                    },
+                                    "operator": "<",
+                                    "right_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "xmax"
+                                    }
+                                 },
+                                 "body": {
+                                    "type": "BlockStatement",
+                                    "statements": [
+                                       {
+                                          "type": "ExpressionStatement",
+                                          "expr": {
+                                             "type": "IfExpression",
+                                             "condition": {
+                                                "type": "InfixExpression",
+                                                "left_node": {
+                                                   "type": "CallExpression",
+                                                   "function": {
+                                                      "type": "IdentifierLiteral",
+                                                      "value": "in_mandelbrot"
+                                                   },
+                                                   "arguments": [
+                                                      {
+                                                         "type": "IdentifierLiteral",
+                                                         "value": "x"
+                                                      },
+                                                      {
+                                                         "type": "IdentifierLiteral",
+                                                         "value": "y"
+                                                      },
+                                                      {
+                                                         "type": "IdentifierLiteral",
+                                                         "value": "threshold"
+                                                      }
+                                                   ]
+                                                },
+                                                "operator": "==",
+                                                "right_node": {
+                                                   "type": "IntegerLiteral",
+                                                   "value": 1
+                                                }
+                                             },
+                                             "consequence": {
+                                                "type": "BlockStatement",
+                                                "statements": [
+                                                   {
+                                                      "type": "ExpressionStatement",
+                                                      "expr": {
+                                                         "type": "CallExpression",
+                                                         "function": {
+                                                            "type": "IdentifierLiteral",
+                                                            "value": "printf"
+                                                         },
+                                                         "arguments": [
+                                                            {
+                                                               "type": "StringLiteral",
+                                                               "value": "*"
+                                                            }
+                                                         ]
+                                                      }
+                                                   }
+                                                ]
+                                             },
+                                             "alternative": {
+                                                "type": "BlockStatement",
+                                                "statements": [
+                                                   {
+                                                      "type": "ExpressionStatement",
+                                                      "expr": {
+                                                         "type": "CallExpression",
+                                                         "function": {
+                                                            "type": "IdentifierLiteral",
+                                                            "value": "printf"
+                                                         },
+                                                         "arguments": [
+                                                            {
+                                                               "type": "StringLiteral",
+                                                               "value": "."
+                                                            }
+                                                         ]
+                                                      }
+                                                   }
+                                                ]
+                                             }
+                                          }
+                                       },
+                                       {
+                                          "type": "AssignStatement",
+                                          "identifier": {
+                                             "type": "IdentifierLiteral",
+                                             "value": "x"
+                                          },
+                                          "value": {
+                                             "type": "InfixExpression",
+                                             "left_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "x"
+                                             },
+                                             "operator": "+",
+                                             "right_node": {
+                                                "type": "IdentifierLiteral",
+                                                "value": "dx"
+                                             }
+                                          }
+                                       }
+                                    ]
                                  }
                               },
                               {
@@ -70,13 +581,28 @@
                                     "arguments": [
                                        {
                                           "type": "StringLiteral",
-                                          "value": "yeet: %i\\n"
-                                       },
-                                       {
-                                          "type": "IdentifierLiteral",
-                                          "value": "a"
+                                          "value": "\n"
                                        }
                                     ]
+                                 }
+                              },
+                              {
+                                 "type": "AssignStatement",
+                                 "identifier": {
+                                    "type": "IdentifierLiteral",
+                                    "value": "y"
+                                 },
+                                 "value": {
+                                    "type": "InfixExpression",
+                                    "left_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "y"
+                                    },
+                                    "operator": "-",
+                                    "right_node": {
+                                       "type": "IdentifierLiteral",
+                                       "value": "dy"
+                                    }
                                  }
                               }
                            ]
@@ -85,8 +611,34 @@
                      {
                         "type": "ReturnStatement",
                         "return_value": {
-                           "type": "IdentifierLiteral",
-                           "value": "a"
+                           "type": "IntegerLiteral",
+                           "value": 0
+                        }
+                     }
+                  ]
+               }
+            }
+         },
+         {
+            "FunctionStatement": {
+               "type": "FunctionStatement",
+               "name": {
+                  "type": "IdentifierLiteral",
+                  "value": "main"
+               },
+               "parameters": [],
+               "body": {
+                  "type": "BlockStatement",
+                  "statements": [
+                     {
+                        "type": "ReturnStatement",
+                        "return_value": {
+                           "type": "CallExpression",
+                           "function": {
+                              "type": "IdentifierLiteral",
+                              "value": "mandel"
+                           },
+                           "arguments": []
                         }
                      }
                   ]

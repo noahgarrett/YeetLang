@@ -14,6 +14,9 @@ bruh main() {
 }
 ```
 
+## Tests
+- Mandelbrot Set script `src/debug/mandel.yeet`
+
 ## Features so far
 - Every program must have a `main` function defined and it must return an integer code
 ```
