@@ -11,7 +11,7 @@ DEBUG: bool = True
 if __name__ == '__main__':
     with open("./debug/test.yeet", "r") as f:
         code: str = f.read()
-    # code: str = "let a = 45 + 5;"
+    # code: str = "print(5);"
 
     l: Lexer = Lexer(source=code)
 

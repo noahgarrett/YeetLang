@@ -1,2 +1,1 @@
-let a = 45 + 5;
-print(a);
+printf("apples %i", 12);

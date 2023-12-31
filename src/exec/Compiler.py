@@ -6,6 +6,7 @@ from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLi
 from llvmlite import ir
 
 
+
 class Compiler:
     def __init__(self) -> None:
         self.type_map: dict = {
@@ -20,18 +21,11 @@ class Compiler:
         # Initializing the main module
         self.module: ir.Module = ir.Module('main')
 
-        # Defining a builtin functions
-        fnty: ir.FunctionType = ir.FunctionType(
-            self.type_map['int'],
-            [ir.IntType(8).as_pointer()],
-            var_arg=True
-        )
-        func: ir.Function = ir.Function(self.module, fnty, 'print')
-
         # Keeping track of defined variables
-        self.variables: dict[str, tuple] = {
-            'print': (func, ir.IntType(32))
-        }
+        self.variables: dict[str, tuple] = {}
+
+        # Defining a builtin functions
+        self.__initialize_builtins()
 
         # Current Builder
         self.builder: ir.IRBuilder = ir.IRBuilder()
@@ -50,6 +44,19 @@ class Compiler:
             # Expressions
             case "InfixExpression":
                 self.__visit_infix_expression(node)
+            case "CallExpression":
+                self.__visit_call_expression(node)
+
+    def __initialize_builtins(self) -> ir.Function:
+        def __init_print() -> ir.Function:
+            fnty: ir.FunctionType = ir.FunctionType(
+                self.type_map['int'],
+                [ir.IntType(8).as_pointer()],
+                var_arg=True
+            )
+            return ir.Function(self.module, fnty, 'print')
+        
+        self.variables['printf'] = (__init_print(), ir.IntType(32))
     
     # region Visit Methods
     def __visit_program(self, node: Program) -> None:
@@ -107,7 +114,7 @@ class Compiler:
             self.builder.store(value, ptr)
     
     def __visit_expression_statement(self, node: ExpressionStatement) -> None:
-        pass
+        self.compile(node.expr)
 
     # Expressions
     def __visit_infix_expression(self, node: InfixExpression) -> tuple:
@@ -141,6 +148,29 @@ class Compiler:
                     value = self.builder.sdiv(left_value, right_value)
         
         return value, Type
+    
+    def __visit_call_expression(self, node: CallExpression) -> None:
+        name: str = node.function.value
+        params: list[Expression] = node.arguments
+
+        args = []
+        types = []
+        if params[0]:
+            for x in params:
+                p_val, p_type = self.__resolve_value(x)
+                args.append(p_val)
+                types.append(p_type)
+
+        # See if we are calling a built-in function or an user-defined function
+        match name:
+            case 'printf':
+                ret = self.builtin_printf(params=args, return_type=types[0])
+                ret_type = self.type_map['int']
+            case _:
+                func, ret_type = self.variables[name]
+                ret = self.builder.call(func, args)
+        
+        return ret, ret_type
     # endregion
         
     # region Helper Methods
@@ -179,4 +209,20 @@ class Compiler:
         buf[-1] = 0
         buf[:-1] = string.encode('utf8')
         return ir.Constant(ir.ArrayType(ir.IntType(8), n), buf), ir.ArrayType(ir.IntType(8), n)
+    # endregion
+
+    # region Builtin Functions
+    def builtin_printf(self, params: list, return_type: ir.Type) -> None:
+        """ Basic C builtin printf """
+
+        format = params[0]
+        params = params[1:]
+        zero = ir.Constant(ir.IntType(32),0)
+        ptr = self.builder.alloca(return_type)
+        self.builder.store(format,ptr)
+        format = ptr
+        format = self.builder.gep(format, [zero, zero])
+        format = self.builder.bitcast(format, ir.IntType(8).as_pointer())
+        func,_ = self.variables['printf']
+        return self.builder.call(func,[format,*params])
     # endregion
