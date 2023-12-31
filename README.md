@@ -6,17 +6,11 @@ Normal language keywords have alternates for the gen z people to feel safe.
 - `return` -> `pause` | `bruh main() { pause 1; }`
 - `;` -> `rn` | `=` -> `be` | `let` -> `lit`
 ```js
+// Example GenZ Approved Program
 bruh main() {
     lit a be 25 rn
 
     pause a rn
-}
-```
-
-```js
-// Example GenZ Approved Program
-bruh add(a, b) {
-    pause a + b;
 }
 ```
 
