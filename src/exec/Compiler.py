@@ -113,11 +113,11 @@ class Compiler:
         # Keep track of the types for each parameter
         param_types: list[ir.Type] = [self.type_map[type(p.value).__name__] for p in params]
 
-        # TODO: Function's return type (make better)
+        # TODO: Function's return type (ALLOW MORE RETURN TYPES FROM FUNCTIONS, RN ITS JUST INTS)
         return_type: ir.Type = self.type_map['void']
         for stmt in body.statements:
             if stmt.type() == 'ReturnStatement':
-                return_type = self.type_map[type(stmt.return_value.value).__name__]
+                return_type = self.type_map['int']
         
         # Defining the function's (return_type, params_type)
         fnty = ir.FunctionType(return_type, param_types)
@@ -198,7 +198,7 @@ class Compiler:
 
         args = []
         types = []
-        if params[0]:
+        if len(params) > 0:
             for x in params:
                 p_val, p_type = self.__resolve_value(x)
                 args.append(p_val)
@@ -241,6 +241,8 @@ class Compiler:
             # Expression Values
             case "InfixExpression":
                 return self.__visit_infix_expression(node)
+            case "CallExpression":
+                return self.__visit_call_expression(node)
 
 
     def __convert_string(self, string: str) -> tuple[ir.Constant, ir.ArrayType]:

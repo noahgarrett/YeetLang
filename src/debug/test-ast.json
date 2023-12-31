@@ -6,6 +6,28 @@
                "type": "FunctionStatement",
                "name": {
                   "type": "IdentifierLiteral",
+                  "value": "testing"
+               },
+               "parameters": [],
+               "body": {
+                  "type": "BlockStatement",
+                  "statements": [
+                     {
+                        "type": "ReturnStatement",
+                        "return_value": {
+                           "type": "IntegerLiteral",
+                           "value": 5
+                        }
+                     }
+                  ]
+               }
+            }
+         },
+         {
+            "FunctionStatement": {
+               "type": "FunctionStatement",
+               "name": {
+                  "type": "IdentifierLiteral",
                   "value": "main"
                },
                "parameters": [],
@@ -13,30 +35,14 @@
                   "type": "BlockStatement",
                   "statements": [
                      {
-                        "type": "ExpressionStatement",
-                        "expr": {
+                        "type": "ReturnStatement",
+                        "return_value": {
                            "type": "CallExpression",
                            "function": {
                               "type": "IdentifierLiteral",
-                              "value": "printf"
+                              "value": "testing"
                            },
-                           "arguments": [
-                              {
-                                 "type": "StringLiteral",
-                                 "value": "apples %i"
-                              },
-                              {
-                                 "type": "IntegerLiteral",
-                                 "value": 2
-                              }
-                           ]
-                        }
-                     },
-                     {
-                        "type": "ReturnStatement",
-                        "return_value": {
-                           "type": "IntegerLiteral",
-                           "value": 1
+                           "arguments": []
                         }
                      }
                   ]

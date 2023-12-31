@@ -1,4 +1,7 @@
+fn testing() {
+    return 5;
+}
+
 fn main() {
-    printf("apples %i", 2);
-    return 1;
+    return testing();
 }
