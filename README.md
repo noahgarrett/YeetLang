@@ -8,7 +8,10 @@ fn main() {
 }
 ```
 
-- Function Definitions
+- Datatypes
+    - int, float, string
+
+- Function Definitions + Function Calling
     - **TEMP** Only i32 data types are allowed to be passed in as parameters and return values for functions
 ```
 fn add(a, b) {
@@ -25,5 +28,26 @@ fn main() {
 fn main() {
     let a = 25;
     a = 5;
+
+    return a;
+}
+```
+
+- Basic Arithmetic (+-*/)
+```
+fn main() {
+    let a = 1 + 2 - 3 * 4 / (4 - 2);
+
+    return a;
+}
+```
+
+- Built-in Functions
+    - `printf` (C-like printf function)
+```
+fn main() {
+    printf("I have %i apples..", 69);
+    
+    return 1;
 }
 ```

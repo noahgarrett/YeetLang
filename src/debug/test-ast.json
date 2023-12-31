@@ -13,32 +13,30 @@
                   "type": "BlockStatement",
                   "statements": [
                      {
-                        "token": "let",
-                        "name": {
-                           "type": "IdentifierLiteral",
-                           "value": "a"
-                        },
-                        "value": {
-                           "type": "IntegerLiteral",
-                           "value": 25
-                        }
-                     },
-                     {
-                        "type": "AssignStatement",
-                        "identifier": {
-                           "type": "IdentifierLiteral",
-                           "value": "a"
-                        },
-                        "value": {
-                           "type": "IntegerLiteral",
-                           "value": 5
+                        "type": "ExpressionStatement",
+                        "expr": {
+                           "type": "CallExpression",
+                           "function": {
+                              "type": "IdentifierLiteral",
+                              "value": "printf"
+                           },
+                           "arguments": [
+                              {
+                                 "type": "StringLiteral",
+                                 "value": "I have %i apples.."
+                              },
+                              {
+                                 "type": "IntegerLiteral",
+                                 "value": 69
+                              }
+                           ]
                         }
                      },
                      {
                         "type": "ReturnStatement",
                         "return_value": {
-                           "type": "IdentifierLiteral",
-                           "value": "a"
+                           "type": "IntegerLiteral",
+                           "value": 1
                         }
                      }
                   ]

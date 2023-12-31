@@ -7,9 +7,9 @@ declare i32 @"printf"(i8* %".1", ...)
 define i32 @"main"()
 {
 main_entry:
-  %".2" = alloca i32
-  store i32 25, i32* %".2"
-  store i32 5, i32* %".2"
-  %".5" = load i32, i32* %".2"
-  ret i32 %".5"
+  %".2" = alloca [19 x i8]
+  store [19 x i8] c"I have %i apples..\00", [19 x i8]* %".2"
+  %".4" = getelementptr [19 x i8], [19 x i8]* %".2", i32 0, i32 0
+  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i32 69)
+  ret i32 1
 }

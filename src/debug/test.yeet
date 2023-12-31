@@ -1,6 +1,5 @@
 fn main() {
-    let a = 25;
-    a = 5;
-
-    return a;
+    printf("I have %i apples..", 69);
+    
+    return 1;
 }
