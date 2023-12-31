@@ -1,5 +1,10 @@
 bruh main() {
     lit a be 25 rn
 
+    while a < 50 {
+        a = a + 1;
+        printf("yeet: %i\n", a);
+    }
+
     pause a rn
 }

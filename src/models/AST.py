@@ -223,7 +223,11 @@ class WhileStatement(Statement):
         return "WhileStatement"
     
     def json(self) -> dict:
-        return super().json()
+        return {
+            "type": self.type(),
+            "condition": self.condition.json(),
+            "body": self.body.json()
+        }
     
 class ForStatement(Statement):
     def __init__(self, token: Token, initializer: LetStatement = None, condition: Expression = None, increment: Expression = None, body: BlockStatement = None) -> None:

@@ -1,5 +1,6 @@
 from models.AST import Program, Node, Expression, Statement
 from models.AST import LetStatement, ExpressionStatement, BlockStatement, ReturnStatement, FunctionStatement, AssignStatement
+from models.AST import WhileStatement
 from models.AST import InfixExpression, PrefixExpression, CallExpression
 from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral, FunctionLiteral
 
@@ -30,6 +31,13 @@ class Compiler:
         # Current Builder
         self.builder: ir.IRBuilder = ir.IRBuilder()
 
+        # Random counter for entries
+        self.counter = -1
+    
+    def inc_counter(self) -> int:
+        self.counter += 1
+        return self.counter
+
     def compile(self, node: Node) -> None:
         match node.type():
             case "Program":
@@ -48,6 +56,8 @@ class Compiler:
                 self.__visit_function_statement(node)
             case "AssignStatement":
                 self.__visit_assign_statement(node)
+            case "WhileStatement":
+                self.__visit_while_statement(node)
 
             # Expressions
             case "InfixExpression":
@@ -178,6 +188,36 @@ class Compiler:
             ptr, _ = self.variables[name]
             self.builder.store(value, ptr)
 
+    def __visit_while_statement(self, node: WhileStatement) -> None:
+        Test = node.condition
+        body = node.body
+        test, _ = self.__resolve_value(Test)
+
+        # Entry (block that runs if the condition is true)
+        while_loop_entry = self.builder.append_basic_block(f"while_loop_entry_{self.inc_counter()}")
+
+        # If the condition is false, it runs from this block
+        while_loop_otherwise = self.builder.append_basic_block(f"while_loop_otherwise_{self.counter}")
+
+        # Creating a condition branch
+        #     condition
+        #        / \
+        # if true   if false
+        #       /   \
+        #      /     \
+        # true block  false block
+        self.builder.cbranch(test, while_loop_entry, while_loop_otherwise)
+
+        # Setting the builder position-at-start
+        self.builder.position_at_start(while_loop_entry)
+        
+        self.compile(body)
+
+        test, _ = self.__resolve_value(Test)
+
+        self.builder.cbranch(test, while_loop_entry, while_loop_otherwise)
+        self.builder.position_at_start(while_loop_otherwise)
+
     # Expressions
     def __visit_infix_expression(self, node: InfixExpression) -> tuple:
         operator: str = node.operator
@@ -197,6 +237,9 @@ class Compiler:
                     value = self.builder.fmul(left_value, right_value)
                 case '/':
                     value = self.builder.fdiv(left_value, right_value)
+                case '<':
+                    value = self.builder.fcmp_ordered('<', left_value, right_value)
+                    Type = ir.IntType(1)
         elif isinstance(right_type, ir.IntType) and isinstance(left_type, ir.IntType):
             Type = ir.IntType(32)
             match operator:
@@ -208,6 +251,9 @@ class Compiler:
                     value = self.builder.mul(left_value, right_value)
                 case '/':
                     value = self.builder.sdiv(left_value, right_value)
+                case '<':
+                    value = self.builder.icmp_signed('<', left_value, right_value)
+                    Type = ir.IntType(1)
         
         return value, Type
     
@@ -256,6 +302,10 @@ class Compiler:
                 node: IdentifierLiteral = node
                 ptr, Type = self.variables[node.value]
                 return self.builder.load(ptr), Type
+            case "BooleanLiteral":
+                node: BooleanLiteral = node
+                value, Type = node.value, self.type_map['bool']
+                return ir.Constant(Type, value), Type
             
             # Expression Values
             case "InfixExpression":

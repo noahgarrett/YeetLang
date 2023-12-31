@@ -65,3 +65,18 @@ fn main() {
     return 1;
 }
 ```
+
+- Loops
+    - While Loops
+```
+fn main() {
+    let a = 25;
+
+    while a < 50 {
+        a = a + 1;
+        printf("yeet: %i\n", a);
+    }
+
+    return a;
+}
+```

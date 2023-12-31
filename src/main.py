@@ -16,12 +16,18 @@ DEBUG: bool = True
 if __name__ == '__main__':
     with open("./debug/test.yeet", "r") as f:
         code: str = f.read()
-    # code: str = """
-    # fn main() {
-    #     printf("apples");
-    #     return 1;
-    # }
-    # """
+#     code: str = """
+# bruh main() {
+#     lit a be 25 rn
+
+#     while a < 50 {
+#         a = a + 1;
+#         printf("yeet: %i", a);
+#     }
+
+#     pause a rn
+# }
+#     """
 
     l: Lexer = Lexer(source=code)
 
