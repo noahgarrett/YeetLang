@@ -1,1 +1,3 @@
-printf("apples %i", 12);
+let main = fn(c, d) {
+    return 1;
+}

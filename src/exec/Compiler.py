@@ -1,7 +1,7 @@
 from models.AST import Program, Node, Expression, Statement
-from models.AST import LetStatement, ExpressionStatement
+from models.AST import LetStatement, ExpressionStatement, BlockStatement, ReturnStatement
 from models.AST import InfixExpression, PrefixExpression, CallExpression
-from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral
+from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral, FunctionLiteral
 
 from llvmlite import ir
 
@@ -40,6 +40,10 @@ class Compiler:
                 self.__visit_let_statement(node)
             case "ExpressionStatement":
                 self.__visit_expression_statement(node)
+            case "BlockStatement":
+                self.__visit_block_statement(node)
+            case "ReturnStatement":
+                self.__visit_return_statement(node)
 
             # Expressions
             case "InfixExpression":
@@ -54,44 +58,44 @@ class Compiler:
                 [ir.IntType(8).as_pointer()],
                 var_arg=True
             )
-            return ir.Function(self.module, fnty, 'print')
+            return ir.Function(self.module, fnty, 'printf')
         
         self.variables['printf'] = (__init_print(), ir.IntType(32))
     
     # region Visit Methods
     def __visit_program(self, node: Program) -> None:
         # Create a fake main function so it does not need to be defined in the source code
-        name: str = 'main'
-        body: list[Statement] = node.statements
-        params: list = []
+        # name: str = 'main'
+        # body: list[Statement] = node.statements
+        # params: list = []
 
-        return_type = self.type_map['int']
+        # return_type = self.type_map['int']
 
-        # Defining the function
-        fnty: ir.FunctionType = ir.FunctionType(
-            return_type=return_type,
-            args=[]
-        )
-        func: ir.Function = ir.Function(self.module, fnty, name=name)
+        # # Defining the function
+        # fnty: ir.FunctionType = ir.FunctionType(
+        #     return_type=return_type,
+        #     args=[]
+        # )
+        # func: ir.Function = ir.Function(self.module, fnty, name=name)
 
-        # Define the function's block
-        block: ir.Block = func.append_basic_block(f'{name}_entry')
+        # # Define the function's block
+        # block: ir.Block = func.append_basic_block(f'{name}_entry')
 
-        # Save the previous builder
-        previous_builder: ir.IRBuilder = self.builder
+        # # Save the previous builder
+        # previous_builder: ir.IRBuilder = self.builder
 
-        # Set the new current builder for the main function's scope
-        self.builder = ir.IRBuilder(block=block)
+        # # Set the new current builder for the main function's scope
+        # self.builder = ir.IRBuilder(block=block)
 
-        # Add the main function to variables
-        self.variables[name] = func, return_type
+        # # Add the main function to variables
+        # self.variables[name] = func, return_type
 
         # Compile the body of the function / program
-        for stmt in body:
+        for stmt in node.statements:
             self.compile(stmt)
 
-        # Return the builder back to normal
-        self.builder = previous_builder
+        # # Return the builder back to normal
+        # self.builder = previous_builder
 
     # Statements
     def __visit_let_statement(self, node: LetStatement) -> None:
@@ -115,6 +119,15 @@ class Compiler:
     
     def __visit_expression_statement(self, node: ExpressionStatement) -> None:
         self.compile(node.expr)
+
+    def __visit_block_statement(self, node: BlockStatement) -> None:
+        for stmt in node.statements:
+            self.compile(stmt)
+
+    def __visit_return_statement(self, node: ReturnStatement) -> None:
+        value = node.return_value
+        value, Type = self.__resolve_value(value)
+        self.builder.ret(value)
 
     # Expressions
     def __visit_infix_expression(self, node: InfixExpression) -> tuple:
@@ -149,7 +162,7 @@ class Compiler:
         
         return value, Type
     
-    def __visit_call_expression(self, node: CallExpression) -> None:
+    def __visit_call_expression(self, node: CallExpression) -> tuple:
         name: str = node.function.value
         params: list[Expression] = node.arguments
 
@@ -171,6 +184,63 @@ class Compiler:
                 ret = self.builder.call(func, args)
         
         return ret, ret_type
+    
+    def __visit_function_literal(self, node: FunctionLiteral) -> tuple:
+        name: str = node.name
+        body: BlockStatement = node.body
+        params: list[IdentifierLiteral] = node.parameters
+
+        # Keep track of the names of each parameter
+        param_names: list[str] = [p.value for p in params]
+
+        # Keep track of the types for each parameter
+        param_types: list[ir.Type] = [self.type_map[type(p.value).__name__] for p in params]
+
+        # TODO: Function's return type (make better)
+        return_type: ir.Type = self.type_map['void']
+        for stmt in body.statements:
+            if stmt.type() == 'ReturnStatement':
+                return_type = self.type_map[type(stmt.return_value.value).__name__]
+        
+        # Defining the function's (return_type, params_type)
+        fnty = ir.FunctionType(return_type, param_types)
+        func = ir.Function(self.module, fnty, name=name)
+
+        # Define the function's block
+        block = func.append_basic_block(f'{name}_entry')
+
+        previous_builder = self.builder
+
+        # Current builder
+        self.builder = ir.IRBuilder(block)
+
+        params_ptr = []
+
+        # Storing the pointers of each param
+        for i, typ in enumerate(param_types):
+            ptr = self.builder.alloca(typ)
+            self.builder.store(func.args[i], ptr)
+            params_ptr.append(ptr)
+        
+        previous_variables = self.variables.copy()
+        for i, x in enumerate(zip(param_types, param_names)):
+            typ = param_types[i]
+            ptr = params_ptr[i]
+
+            # Add the function's parameter to the stored variables
+            self.variables[x[1]] = ptr, typ
+        
+        # Adding the function to variables
+        self.variables[name] = func, return_type
+
+        # Compile the body of the function
+        self.compile(body)
+
+        # Removing the function's variables so it cannot be accessed by other functions
+        self.variables = previous_variables
+        self.variables[name] = func, return_type
+
+        self.builder = previous_builder
     # endregion
         
     # region Helper Methods
@@ -194,6 +264,8 @@ class Compiler:
                 node: IdentifierLiteral = node
                 ptr, Type = self.variables[node.value]
                 return self.builder.load(ptr), Type
+            case "FunctionLiteral":
+                return self.__visit_function_literal(node)
             
             # Expression Values
             case "InfixExpression":

@@ -2,24 +2,37 @@
    "Program": {
       "statements": [
          {
-            "ExpressionStatement": {
-               "type": "ExpressionStatement",
-               "expr": {
-                  "type": "CallExpression",
-                  "function": {
-                     "type": "IdentifierLiteral",
-                     "value": "printf"
-                  },
-                  "arguments": [
+            "LetStatement": {
+               "token": "let",
+               "name": {
+                  "type": "IdentifierLiteral",
+                  "value": "main"
+               },
+               "value": {
+                  "type": "FunctionLiteral",
+                  "name": "main",
+                  "parameters": [
                      {
-                        "type": "StringLiteral",
-                        "value": "apples %i"
+                        "type": "IdentifierLiteral",
+                        "value": "c"
                      },
                      {
-                        "type": "IntegerLiteral",
-                        "value": 12
+                        "type": "IdentifierLiteral",
+                        "value": "d"
                      }
-                  ]
+                  ],
+                  "body": {
+                     "type": "BlockStatement",
+                     "statements": [
+                        {
+                           "type": "ReturnStatement",
+                           "return_value": {
+                              "type": "IntegerLiteral",
+                              "value": 1
+                           }
+                        }
+                     ]
+                  }
                }
             }
          }
