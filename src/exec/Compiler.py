@@ -1,6 +1,7 @@
 from models.AST import Program, Node, Expression, Statement
-from models.AST import LetStatement
-from models.AST import IntegerLiteral, IdentifierLiteral
+from models.AST import LetStatement, ExpressionStatement
+from models.AST import InfixExpression, PrefixExpression, CallExpression
+from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral
 
 from llvmlite import ir
 
@@ -43,6 +44,12 @@ class Compiler:
             # Statements
             case "LetStatement":
                 self.__visit_let_statement(node)
+            case "ExpressionStatement":
+                self.__visit_expression_statement(node)
+
+            # Expressions
+            case "InfixExpression":
+                self.__visit_infix_expression(node)
     
     # region Visit Methods
     def __visit_program(self, node: Program) -> None:
@@ -98,14 +105,78 @@ class Compiler:
         else:
             ptr, _ = self.variables[name]
             self.builder.store(value, ptr)
+    
+    def __visit_expression_statement(self, node: ExpressionStatement) -> None:
+        pass
+
+    # Expressions
+    def __visit_infix_expression(self, node: InfixExpression) -> tuple:
+        operator: str = node.operator
+        left_value, left_type = self.__resolve_value(node.left_node)
+        right_value, right_type = self.__resolve_value(node.right_node)
+
+        value = None
+        Type = None
+        if isinstance(right_type, ir.FloatType) and isinstance(left_type, ir.FloatType):
+            Type = ir.FloatType()
+            match operator:
+                case '+':
+                    value = self.builder.fadd(left_value, right_value)
+                case '-':
+                    value = self.builder.fsub(left_value, right_value)
+                case '*':
+                    value = self.builder.fmul(left_value, right_value)
+                case '/':
+                    value = self.builder.fdiv(left_value, right_value)
+        elif isinstance(right_type, ir.IntType) and isinstance(left_type, ir.IntType):
+            Type = ir.IntType(32)
+            match operator:
+                case '+':
+                    value = self.builder.add(left_value, right_value)
+                case '-':
+                    value = self.builder.sub(left_value, right_value)
+                case '*':
+                    value = self.builder.mul(left_value, right_value)
+                case '/':
+                    value = self.builder.sdiv(left_value, right_value)
+        
+        return value, Type
     # endregion
         
     # region Helper Methods
     def __resolve_value(self, node: Expression) -> tuple[ir.Value, ir.Type]:
         """ Resolves a value and returns a tuple (ir_value, ir_type) """
         match node.type():
+            # Literal Values
             case "IntegerLiteral":
                 node: IntegerLiteral = node
                 value, Type = node.value, self.type_map['int']
                 return ir.Constant(Type, value), Type
+            case "FloatLiteral":
+                node: FloatLiteral = node
+                value, Type = node.value, self.type_map['float']
+                return ir.Constant(Type, value), Type
+            case "StringLiteral":
+                node: StringLiteral = node
+                string, Type = self.__convert_string(node.value)
+                return string, Type
+            case "IdentifierLiteral":
+                node: IdentifierLiteral = node
+                ptr, Type = self.variables[node.value]
+                return self.builder.load(ptr), Type
+            
+            # Expression Values
+            case "InfixExpression":
+                return self.__visit_infix_expression(node)
+
+
+    def __convert_string(self, string: str) -> tuple[ir.Constant, ir.ArrayType]:
+        """ Strings are converted into an array of characters """
+        string = string[1:-1]
+        string = string.replace('\\n', '\n\0')
+        n = len(string) + 1
+        buf = bytearray((' ' * n).encode('ascii'))
+        buf[-1] = 0
+        buf[:-1] = string.encode('utf8')
+        return ir.Constant(ir.ArrayType(ir.IntType(8), n), buf), ir.ArrayType(ir.IntType(8), n)
     # endregion

@@ -9,8 +9,34 @@
                   "value": "a"
                },
                "value": {
-                  "type": "IntegerLiteral",
-                  "value": 45
+                  "type": "InfixExpression",
+                  "left_node": {
+                     "type": "IntegerLiteral",
+                     "value": 45
+                  },
+                  "operator": "+",
+                  "right_node": {
+                     "type": "IntegerLiteral",
+                     "value": 5
+                  }
+               }
+            }
+         },
+         {
+            "ExpressionStatement": {
+               "type": "ExpressionStatement",
+               "expr": {
+                  "type": "CallExpression",
+                  "function": {
+                     "type": "IdentifierLiteral",
+                     "value": "print"
+                  },
+                  "arguments": [
+                     {
+                        "type": "IdentifierLiteral",
+                        "value": "a"
+                     }
+                  ]
                }
             }
          }
