@@ -5,10 +5,17 @@ Normal language keywords have alternates for the gen z people to feel safe.
 - `fn` -> `bruh` | `bruh main() { }`
 - `return` -> `pause` | `bruh main() { pause 1; }`
 - `;` -> `rn` | `=` -> `be` | `let` -> `lit`
+- `if/else` -> `sus/imposter`
 ```js
 // Example GenZ Approved Program
 bruh main() {
     lit a be 25 rn
+
+    sus a == 25 {
+        printf("oh boi") rn
+    } imposter {
+        printf("yesssssir") rn
+    }
 
     pause a rn
 }
@@ -82,5 +89,20 @@ fn main() {
     }
 
     return a;
+}
+```
+
+- Conditionals
+```
+fn main() {
+    let a = 0;
+
+    if a == 0 {
+        printf("A BE ZERO");
+    } else {
+        printf("NO ZERO HERE");
+    }
+
+    return 0;
 }
 ```

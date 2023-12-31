@@ -1,8 +1,10 @@
 bruh main() {
     lit a be 5 rn
 
-    if a == 5 {
+    sus a == 5 {
         printf("yes") rn
+    } imposter {
+        printf("no") rn
     }
 
     pause 0;
