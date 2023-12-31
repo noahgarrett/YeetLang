@@ -6,45 +6,6 @@
                "type": "FunctionStatement",
                "name": {
                   "type": "IdentifierLiteral",
-                  "value": "add"
-               },
-               "parameters": [
-                  {
-                     "type": "IdentifierLiteral",
-                     "value": "a"
-                  },
-                  {
-                     "type": "IdentifierLiteral",
-                     "value": "b"
-                  }
-               ],
-               "body": {
-                  "type": "BlockStatement",
-                  "statements": [
-                     {
-                        "type": "ReturnStatement",
-                        "return_value": {
-                           "type": "InfixExpression",
-                           "left_node": {
-                              "type": "IdentifierLiteral",
-                              "value": "a"
-                           },
-                           "operator": "+",
-                           "right_node": {
-                              "type": "IdentifierLiteral",
-                              "value": "b"
-                           }
-                        }
-                     }
-                  ]
-               }
-            }
-         },
-         {
-            "FunctionStatement": {
-               "type": "FunctionStatement",
-               "name": {
-                  "type": "IdentifierLiteral",
                   "value": "main"
                },
                "parameters": [],
@@ -52,23 +13,32 @@
                   "type": "BlockStatement",
                   "statements": [
                      {
+                        "token": "let",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "a"
+                        },
+                        "value": {
+                           "type": "IntegerLiteral",
+                           "value": 25
+                        }
+                     },
+                     {
+                        "type": "AssignStatement",
+                        "identifier": {
+                           "type": "IdentifierLiteral",
+                           "value": "a"
+                        },
+                        "value": {
+                           "type": "IntegerLiteral",
+                           "value": 5
+                        }
+                     },
+                     {
                         "type": "ReturnStatement",
                         "return_value": {
-                           "type": "CallExpression",
-                           "function": {
-                              "type": "IdentifierLiteral",
-                              "value": "add"
-                           },
-                           "arguments": [
-                              {
-                                 "type": "IntegerLiteral",
-                                 "value": 1
-                              },
-                              {
-                                 "type": "IntegerLiteral",
-                                 "value": 2
-                              }
-                           ]
+                           "type": "IdentifierLiteral",
+                           "value": "a"
                         }
                      }
                   ]

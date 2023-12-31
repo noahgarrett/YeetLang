@@ -1,5 +1,5 @@
 from models.AST import Program, Node, Expression, Statement
-from models.AST import LetStatement, ExpressionStatement, BlockStatement, ReturnStatement, FunctionStatement
+from models.AST import LetStatement, ExpressionStatement, BlockStatement, ReturnStatement, FunctionStatement, AssignStatement
 from models.AST import InfixExpression, PrefixExpression, CallExpression
 from models.AST import IntegerLiteral, IdentifierLiteral, FloatLiteral, StringLiteral, BooleanLiteral, FunctionLiteral
 
@@ -46,6 +46,8 @@ class Compiler:
                 self.__visit_return_statement(node)
             case "FunctionStatement":
                 self.__visit_function_statement(node)
+            case "AssignStatement":
+                self.__visit_assign_statement(node)
 
             # Expressions
             case "InfixExpression":
@@ -159,6 +161,22 @@ class Compiler:
         self.variables[name] = func, return_type
 
         self.builder = previous_builder
+
+    def __visit_assign_statement(self, node: AssignStatement) -> None:
+        name: str = node.ident.value
+        value = node.right_value
+
+        value, Type = self.__resolve_value(value)
+
+        if not self.variables.__contains__(name):
+            ptr = self.builder.alloca(Type)
+            
+            self.builder.store(value, ptr)
+
+            self.variables[name] = ptr, Type
+        else:
+            ptr, _ = self.variables[name]
+            self.builder.store(value, ptr)
 
     # Expressions
     def __visit_infix_expression(self, node: InfixExpression) -> tuple:
