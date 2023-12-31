@@ -9,17 +9,19 @@ from utils import ast_to_json
 from llvmlite import ir
 import llvmlite.binding as llvm
 from ctypes import CFUNCTYPE, c_int, c_float
+import time
 
-DEBUG: bool = False
+DEBUG: bool = True
 
 if __name__ == '__main__':
-    # with open("./debug/test.yeet", "r") as f:
-    #     code: str = f.read()
-    code: str = """
-    let main = fn(c, d) {
-        return 1;
-    }
-    """
+    with open("./debug/test.yeet", "r") as f:
+        code: str = f.read()
+    # code: str = """
+    # fn main() {
+    #     printf("apples");
+    #     return 1;
+    # }
+    # """
 
     l: Lexer = Lexer(source=code)
 
@@ -66,5 +68,10 @@ if __name__ == '__main__':
     entry = engine.get_function_address('main')
     cfunc = CFUNCTYPE(c_int)(entry)
 
+    st = time.time()
+
     result = cfunc()
-    print(f'Program returned: {result}')
+
+    et = time.time()
+
+    print(f'\n\nProgram returned: {result}\n=== Executed in {round((et - st) * 1000, 6)} ms. ===')

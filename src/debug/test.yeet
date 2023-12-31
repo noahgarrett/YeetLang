@@ -1,3 +1,4 @@
-let main = fn(c, d) {
+fn main() {
+    printf("apples %i", 2);
     return 1;
 }

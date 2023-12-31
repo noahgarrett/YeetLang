@@ -6,7 +6,7 @@ from typing import Callable
 from models.AST import Statement, Expression, Program, ExpressionStatement, PrefixExpression, InfixExpression, IntegerLiteral, FloatLiteral
 from models.AST import IdentifierLiteral, LetStatement, BooleanLiteral, IfExpression, BlockStatement, AssignStatement, ReturnStatement
 from models.AST import FunctionLiteral, CallExpression, StringLiteral, ArrayLiteral, HashLiteral, IndexExpression, ImportStatement
-from models.AST import WhileStatement, ForStatement
+from models.AST import WhileStatement, ForStatement, FunctionStatement
 
 
 # Precedence Types
@@ -155,6 +155,8 @@ class Parser:
                 return self.__parse_while_statement()
             case TokenType.FOR:
                 return self.__parse_for_statement()
+            case TokenType.FUNCTION:
+                return self.__parse_function_statement()
             case _:
                 return self.__parse_expression_statement()
             
@@ -283,6 +285,27 @@ class Parser:
         stmt.body = self.__parse_block_statement()
 
         return stmt
+    
+    def __parse_function_statement(self) -> FunctionStatement:
+        stmt: FunctionStatement = FunctionStatement(token=self.current_token)
+
+        if not self.__expect_peek(TokenType.IDENT):
+            return None
+        
+        stmt.name = IdentifierLiteral(token=self.current_token, value=self.current_token.literal)
+
+        if not self.__expect_peek(TokenType.LPAREN):
+            return None
+
+        stmt.parameters = self.__parse_function_parameters()
+
+        if not self.__expect_peek(TokenType.LBRACE):
+            return None
+        
+        stmt.body = self.__parse_block_statement()
+
+        return stmt
+        
     # endregion
 
     # region Parser Execution **EXPRESSION** methods

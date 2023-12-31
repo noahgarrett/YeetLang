@@ -254,6 +254,46 @@ class ForStatement(Statement):
     
     def json(self) -> dict:
         return super().json()
+    
+class FunctionStatement(Statement):
+    def __init__(self, token: Token, parameters: list = [], body: BlockStatement = None, name = None) -> None:
+        self.token = token
+        self.parameters = parameters
+        self.body = body
+        self.name = name
+    
+    def token_literal(self) -> str:
+        return self.token.literal
+    
+    def string(self) -> str:
+        output: str = ""
+
+        params: list[str] = []
+        for p in self.parameters:
+            params.append(p.string())
+        
+        output += self.token_literal()
+        if not self.name == "":
+            output += f"<{self.name}>"
+        output += "("
+        output += ",".join(params)
+        output += ") "
+        output += "{ "
+        output += self.body.string()
+        output += " }"
+        
+        return output
+    
+    def type(self) -> str:
+        return "FunctionStatement"
+    
+    def json(self) -> dict:
+        return {
+            "type": self.type(),
+            "name": self.name.json(),
+            "parameters": [p.json() for p in self.parameters],
+            "body": self.body.json()
+        }
 
 # endregion
 

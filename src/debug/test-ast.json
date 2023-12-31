@@ -2,37 +2,44 @@
    "Program": {
       "statements": [
          {
-            "LetStatement": {
-               "token": "let",
+            "FunctionStatement": {
+               "type": "FunctionStatement",
                "name": {
                   "type": "IdentifierLiteral",
                   "value": "main"
                },
-               "value": {
-                  "type": "FunctionLiteral",
-                  "name": "main",
-                  "parameters": [
+               "parameters": [],
+               "body": {
+                  "type": "BlockStatement",
+                  "statements": [
                      {
-                        "type": "IdentifierLiteral",
-                        "value": "c"
+                        "type": "ExpressionStatement",
+                        "expr": {
+                           "type": "CallExpression",
+                           "function": {
+                              "type": "IdentifierLiteral",
+                              "value": "printf"
+                           },
+                           "arguments": [
+                              {
+                                 "type": "StringLiteral",
+                                 "value": "apples %i"
+                              },
+                              {
+                                 "type": "IntegerLiteral",
+                                 "value": 2
+                              }
+                           ]
+                        }
                      },
                      {
-                        "type": "IdentifierLiteral",
-                        "value": "d"
-                     }
-                  ],
-                  "body": {
-                     "type": "BlockStatement",
-                     "statements": [
-                        {
-                           "type": "ReturnStatement",
-                           "return_value": {
-                              "type": "IntegerLiteral",
-                              "value": 1
-                           }
+                        "type": "ReturnStatement",
+                        "return_value": {
+                           "type": "IntegerLiteral",
+                           "value": 1
                         }
-                     ]
-                  }
+                     }
+                  ]
                }
             }
          }
