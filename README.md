@@ -1,5 +1,25 @@
 # YeetLang
 
+## GenZ Approved Features
+Normal language keywords have alternates for the gen z people to feel safe.
+- `fn` -> `bruh` | `bruh main() { }`
+- `return` -> `pause` | `bruh main() { pause 1; }`
+- `;` -> `rn` | `=` -> `be` | `let` -> `lit`
+```js
+bruh main() {
+    lit a be 25 rn
+
+    pause a rn
+}
+```
+
+```js
+// Example GenZ Approved Program
+bruh add(a, b) {
+    pause a + b;
+}
+```
+
 ## Features so far
 - Every program must have a `main` function defined and it must return an integer code
 ```

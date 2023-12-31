@@ -13,30 +13,21 @@
                   "type": "BlockStatement",
                   "statements": [
                      {
-                        "type": "ExpressionStatement",
-                        "expr": {
-                           "type": "CallExpression",
-                           "function": {
-                              "type": "IdentifierLiteral",
-                              "value": "printf"
-                           },
-                           "arguments": [
-                              {
-                                 "type": "StringLiteral",
-                                 "value": "I have %i apples.."
-                              },
-                              {
-                                 "type": "IntegerLiteral",
-                                 "value": 69
-                              }
-                           ]
+                        "token": "lit",
+                        "name": {
+                           "type": "IdentifierLiteral",
+                           "value": "a"
+                        },
+                        "value": {
+                           "type": "IntegerLiteral",
+                           "value": 25
                         }
                      },
                      {
                         "type": "ReturnStatement",
                         "return_value": {
-                           "type": "IntegerLiteral",
-                           "value": 1
+                           "type": "IdentifierLiteral",
+                           "value": "a"
                         }
                      }
                   ]

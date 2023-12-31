@@ -89,7 +89,9 @@ GENZ_KEYWORDS: dict[str, TokenType] = {
     "nocap": TokenType.TRUE,
     "cap": TokenType.FALSE,
     "sus": TokenType.IF,
-    "imposter": TokenType.ELSE
+    "imposter": TokenType.ELSE,
+    "bruh": TokenType.FUNCTION,
+    "pause": TokenType.RETURN
 }
 
 def lookup_ident(ident: str) -> TokenType:
