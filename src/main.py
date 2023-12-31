@@ -1,9 +1,12 @@
 from exec.Lexer import Lexer
 from exec.Parser import Parser
+from exec.Compiler import Compiler
 
 from models.AST import Program
 
 from utils import ast_to_json
+
+DEBUG: bool = True
 
 if __name__ == '__main__':
     with open("./debug/test.yeet", "r") as f:
@@ -19,4 +22,13 @@ if __name__ == '__main__':
             print(err)
         exit(1)
     
-    ast_to_json(program=program)
+    if DEBUG:
+        ast_to_json(program=program)
+
+    c: Compiler = Compiler()
+    c.compile(node=program)
+
+    if DEBUG:
+        # Print the IR to debug file
+        with open("./debug/test-ir.ll", "w") as f:
+            f.write(str(c.module))
