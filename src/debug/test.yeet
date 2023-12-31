@@ -1,7 +1,7 @@
-fn testing() {
-    return 5;
+fn add(a, b) {
+    return a + b;
 }
 
 fn main() {
-    return testing();
+    return add(1, 2);
 }

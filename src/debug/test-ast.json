@@ -6,17 +6,34 @@
                "type": "FunctionStatement",
                "name": {
                   "type": "IdentifierLiteral",
-                  "value": "testing"
+                  "value": "add"
                },
-               "parameters": [],
+               "parameters": [
+                  {
+                     "type": "IdentifierLiteral",
+                     "value": "a"
+                  },
+                  {
+                     "type": "IdentifierLiteral",
+                     "value": "b"
+                  }
+               ],
                "body": {
                   "type": "BlockStatement",
                   "statements": [
                      {
                         "type": "ReturnStatement",
                         "return_value": {
-                           "type": "IntegerLiteral",
-                           "value": 5
+                           "type": "InfixExpression",
+                           "left_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "a"
+                           },
+                           "operator": "+",
+                           "right_node": {
+                              "type": "IdentifierLiteral",
+                              "value": "b"
+                           }
                         }
                      }
                   ]
@@ -40,9 +57,18 @@
                            "type": "CallExpression",
                            "function": {
                               "type": "IdentifierLiteral",
-                              "value": "testing"
+                              "value": "add"
                            },
-                           "arguments": []
+                           "arguments": [
+                              {
+                                 "type": "IntegerLiteral",
+                                 "value": 1
+                              },
+                              {
+                                 "type": "IntegerLiteral",
+                                 "value": 2
+                              }
+                           ]
                         }
                      }
                   ]

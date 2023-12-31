@@ -111,7 +111,8 @@ class Compiler:
         param_names: list[str] = [p.value for p in params]
 
         # Keep track of the types for each parameter
-        param_types: list[ir.Type] = [self.type_map[type(p.value).__name__] for p in params]
+        # TODO: ALLOW MORE PARAM TYPES OTHER THAN INT
+        param_types: list[ir.Type] = [self.type_map['int'] for p in params]
 
         # TODO: Function's return type (ALLOW MORE RETURN TYPES FROM FUNCTIONS, RN ITS JUST INTS)
         return_type: ir.Type = self.type_map['void']
