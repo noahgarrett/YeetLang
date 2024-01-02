@@ -1,0 +1,4 @@
+fn main(a: int, b: float) -> int {
+    c = 4
+    return 1
+}

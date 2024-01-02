@@ -1,0 +1,2 @@
+# llvmlite @ file:///C:/b/abs_458aeunq7a/croot/llvmlite_1697031108211/work `conda install llvmlite`
+sly==0.5

@@ -4,17 +4,26 @@ target datalayout = ""
 
 declare i32 @"printf"(i8* %".1", ...)
 
+define float @"test"(float %".1")
+{
+test_entry:
+  %".3" = alloca float
+  store float %".1", float* %".3"
+  %".5" = load float, float* %".3"
+  %".6" = fadd float %".5", 0x4016000000000000
+  ret float %".6"
+}
+
 define i32 @"main"()
 {
 main_entry:
-  %".2" = add i32 1, 2
-  %".3" = mul i32 3, 4
-  %".4" = sub i32 4, 2
-  %".5" = sdiv i32 %".3", %".4"
-  %".6" = sdiv i32 %".5", 2
-  %".7" = sub i32 %".2", %".6"
-  %".8" = alloca i32
-  store i32 %".7", i32* %".8"
-  %".10" = load i32, i32* %".8"
-  ret i32 %".10"
+  %".2" = alloca float
+  store float 0x4016000000000000, float* %".2"
+  %".4" = load float, float* %".2"
+  %".5" = call float @"test"(float %".4")
+  %".6" = alloca [3 x i8]
+  store [3 x i8] c"%i\00", [3 x i8]* %".6"
+  %".8" = getelementptr [3 x i8], [3 x i8]* %".6", i32 0, i32 0
+  %".9" = call i32 (i8*, ...) @"printf"(i8* %".8", float %".5")
+  ret i32 0
 }

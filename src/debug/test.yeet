@@ -1,11 +1,15 @@
-fn test(a: str) -> str {
+fn test(a: float) -> float {
+    return a + 5.5;
+}
+
+fn string(a: str) -> str {
     return a;
 }
 
 fn main() -> int {
-    let x: str = test("yeet");
+    let coolNumber: float = 5.5;
 
-    printf();
+    printf(string("yes"));
 
     return 0;
 }
