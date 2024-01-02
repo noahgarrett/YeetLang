@@ -1,11 +1,11 @@
-bruh main() {
-    lit a be 5 rn
+fn test(a: str) -> str {
+    return a;
+}
 
-    sus a == 5 {
-        printf("yes") rn
-    } imposter {
-        printf("no") rn
-    }
+fn main() -> int {
+    let x: str = test("yeet");
 
-    pause 0;
+    printf();
+
+    return 0;
 }

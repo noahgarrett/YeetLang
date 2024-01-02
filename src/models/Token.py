@@ -41,6 +41,7 @@ class TokenType(Enum):
     LBRACKET = "["
     RBRACKET = "]"
     COLON = ":"
+    ARROW = "->"
 
     # Keywords
     FUNCTION = "FUNCTION"
@@ -53,6 +54,11 @@ class TokenType(Enum):
     IMPORT = "IMPORT"
     WHILE = "WHILE"
     FOR = "FOR"
+
+    # Type Declaration
+    T_INT = "T_INT"
+    T_FLOAT = "T_FLOAT"
+    T_STRING = "T_STRING"
 
 class Token:
     def __init__(self, token_type: TokenType, literal: str | None) -> None:
@@ -82,6 +88,12 @@ KEYWORDS: dict[str, TokenType] = {
     "for": TokenType.FOR
 }
 
+TYPE_KEYWORDS: dict[str, TokenType] = {
+    "int": TokenType.T_INT,
+    "float": TokenType.T_FLOAT,
+    "str": TokenType.T_STRING
+}
+
 GENZ_KEYWORDS: dict[str, TokenType] = {
     "lit": TokenType.LET,
     "be": TokenType.ASSIGN,
@@ -100,6 +112,10 @@ def lookup_ident(ident: str) -> TokenType:
         return tt
     
     tt: TokenType | None = GENZ_KEYWORDS.get(ident)
+    if tt is not None:
+        return tt
+    
+    tt: TokenType | None = TYPE_KEYWORDS.get(ident)
     if tt is not None:
         return tt
     

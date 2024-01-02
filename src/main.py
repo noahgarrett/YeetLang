@@ -3,6 +3,7 @@ from exec.Parser import Parser
 from exec.Compiler import Compiler
 
 from models.AST import Program
+from models.Token import TokenType, Token
 
 from utils import ast_to_json
 
@@ -11,72 +12,25 @@ import llvmlite.binding as llvm
 from ctypes import CFUNCTYPE, c_int, c_float
 import time
 
-DEBUG: bool = True
+DEBUG_LEXER: bool = False
+DEBUG_PARSER: bool = True
+DEBUG_IR: bool = True
 
 if __name__ == '__main__':
     with open("./debug/test.yeet", "r") as f:
         code: str = f.read()
-#     code: str = """
-# bruh in_mandelbrot(xP, yP, n) {
-#     let x = 0.0;
-#     let y = 0.0;
-#     let xtemp = 0.0;
 
-#     while n > 0.0 {
-#         xtemp = (x * x) - (y * y) + xP;
-#         y = (2.0 * x * y) + yP;
-#         x = xtemp;
-#         n = n - 1.0;
-
-#         if x * x + y * y > 4.0 {
-#             return 0;
-#         }
-#     }
-
-#     return 1;
-# }
-
-# bruh mandel() {
-#     let xmin = -2.0;
-#     let xmax = 1.0;
-#     let ymin = -1.5;
-#     let ymax = 1.5;
-#     let width = 80.0;
-#     let height = 40.0;
-#     let threshold = 1000.0;
-
-#     let dx = (xmax - xmin) / width;
-#     let dy = (ymax - ymin) / height;
-
-#     let y = ymax;
-#     let x = 0.0;
-
-#     while y >= ymin {
-#         x = xmin;
-
-#         while x < xmax {
-#             if in_mandelbrot(x, y, threshold) == 1 {
-#                 printf("*");
-#             } else {
-#                 printf(".");
-#             }
-
-#             x = x + dx;
-#         }
-
-#         printf("\n");
-#         y = y - dy;
-#     }
-
-#     return 0;
-# }
-
-# bruh main() {
-#     return mandel();
-# }
-#     """
-
+    # region AST Generation Pass
     l: Lexer = Lexer(source=code)
+
+    if DEBUG_LEXER:
+        while 1:
+            tok = l.next_token()
+            print(str(tok))
+            if tok.type == TokenType.EOF or tok.type == TokenType.ILLEGAL:
+                break
+        exit(1)
+
 
     p: Parser = Parser(lexer=l)
 
@@ -86,8 +40,9 @@ if __name__ == '__main__':
             print(err)
         exit(1)
     
-    if DEBUG:
+    if DEBUG_PARSER:
         ast_to_json(program=program)
+    # endregion
 
     c: Compiler = Compiler()
     c.compile(node=program)
@@ -96,7 +51,7 @@ if __name__ == '__main__':
     module: ir.Module = c.module
     module.triple = llvm.get_default_triple()
 
-    if DEBUG:
+    if DEBUG_IR:
         # Print the IR to debug file
         with open("./debug/test-ir.ll", "w") as f:
             f.write(str(module))

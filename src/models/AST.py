@@ -98,10 +98,12 @@ class AssignStatement(Statement):
         }
     
 class LetStatement(Statement):
-    def __init__(self, token: Token, name, value: Expression) -> None:
+    def __init__(self, token: Token, name, value: Expression, value_type: str) -> None:
         self.token = token
         self.name: IdentifierLiteral = name
         self.value = value
+
+        self.value_type: str = value_type
 
     def token_literal(self) -> str:
         return self.token.literal
@@ -127,7 +129,8 @@ class LetStatement(Statement):
         return {
             "token": self.token_literal(),
             "name": self.name.json(),
-            "value": self.value.json()
+            "value": self.value.json(),
+            "value_type": self.value_type
         }
     
 class ImportStatement(Statement):
@@ -260,11 +263,13 @@ class ForStatement(Statement):
         return super().json()
     
 class FunctionStatement(Statement):
-    def __init__(self, token: Token, parameters: list = [], body: BlockStatement = None, name = None) -> None:
+    def __init__(self, token: Token, parameters: list = [], body: BlockStatement = None, name = None, return_type: str = None) -> None:
         self.token = token
         self.parameters = parameters
         self.body = body
         self.name = name
+
+        self.return_type = return_type
     
     def token_literal(self) -> str:
         return self.token.literal
@@ -295,6 +300,7 @@ class FunctionStatement(Statement):
         return {
             "type": self.type(),
             "name": self.name.json(),
+            "return_type": self.return_type,
             "parameters": [p.json() for p in self.parameters],
             "body": self.body.json()
         }
@@ -524,9 +530,11 @@ class StringLiteral(Expression):
         }
     
 class IdentifierLiteral(Expression):
-    def __init__(self, token: Token, value: str = None) -> None:
+    def __init__(self, token: Token, value: str = None, value_type: str = None) -> None:
         self.token = token
         self.value = value
+
+        self.value_type: str = value_type
 
     def token_literal(self) -> str:
         return self.token.literal
@@ -540,7 +548,8 @@ class IdentifierLiteral(Expression):
     def json(self) -> dict:
         return {
             "type": self.type(),
-            "value": self.value
+            "value": self.value,
+            "value_type": self.value_type
         }
     
 class BooleanLiteral(Expression):
@@ -620,11 +629,13 @@ class HashLiteral(Expression):
         }
     
 class FunctionLiteral(Expression):
-    def __init__(self, token: Token, parameters: list[IdentifierLiteral] = None, body: BlockStatement = None, name: str = "") -> None:
+    def __init__(self, token: Token, parameters: list[IdentifierLiteral] = None, body: BlockStatement = None, name: str = "", return_type: str = None) -> None:
         self.token = token
         self.parameters = parameters
         self.body = body
         self.name: str = name
+
+        self.return_type: str = return_type
 
     def token_literal(self) -> str:
         return self.token.literal
@@ -656,6 +667,7 @@ class FunctionLiteral(Expression):
             "type": self.type(),
             "name": self.name,
             "parameters": [p.json() for p in self.parameters],
+            "return_type": self.return_type,
             "body": self.body.json()
         }
 # endregion

@@ -177,7 +177,7 @@ class Parser:
 
         if self.__peek_token_is(TokenType.ASSIGN):
             self.__next_token()
-            return self.__parse_assignment_expression(expr)
+            return self.__parse_assignment_statement(expr)
 
         if self.__peek_token_is(TokenType.SEMICOLON):
             self.__next_token()
@@ -203,12 +203,23 @@ class Parser:
         return stmt
     
     def __parse_let_statement(self) -> LetStatement:
-        stmt: LetStatement = LetStatement(token=self.current_token, name=None, value=None)
+        stmt: LetStatement = LetStatement(token=self.current_token, name=None, value=None, value_type=None)
 
         if not self.__expect_peek(TokenType.IDENT):
             return None
         
         stmt.name = IdentifierLiteral(token=self.current_token, value=self.current_token.literal)
+
+        # Type declaration additions
+        if not self.__expect_peek(TokenType.COLON):
+            return None
+        
+        self.__next_token()
+
+        if not "T_" in self.current_token.type.name:
+            return None
+        
+        stmt.value_type = self.current_token.literal
 
         if not self.__expect_peek(TokenType.ASSIGN):
             return None
@@ -298,6 +309,13 @@ class Parser:
             return None
 
         stmt.parameters = self.__parse_function_parameters()
+
+        if not self.__expect_peek(TokenType.ARROW):
+            return None
+        
+        self.__next_token()
+
+        stmt.return_type = self.current_token.literal
 
         if not self.__expect_peek(TokenType.LBRACE):
             return None
@@ -470,13 +488,30 @@ class Parser:
         
         self.__next_token()
 
-        idents.append(IdentifierLiteral(token=self.current_token, value=self.current_token.literal))
+        first_param: IdentifierLiteral = IdentifierLiteral(token=self.current_token, value=self.current_token.literal)
+
+        if not self.__expect_peek(TokenType.COLON):
+            return None
+        
+        self.__next_token()
+
+        first_param.value_type = self.current_token.literal
+        idents.append(first_param)
 
         while self.__peek_token_is(TokenType.COMMA):
             self.__next_token()
             self.__next_token()
 
-            idents.append(IdentifierLiteral(token=self.current_token, value=self.current_token.literal))
+            param: IdentifierLiteral = IdentifierLiteral(token=self.current_token, value=self.current_token.literal)
+            
+            if not self.__expect_peek(TokenType.COLON):
+                return None
+            
+            self.__next_token()
+
+            param.value_type = self.current_token.literal
+
+            idents.append(param)
         
         if not self.__expect_peek(TokenType.RPAREN):
             return None

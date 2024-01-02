@@ -13,6 +13,7 @@ class Compiler:
         self.type_map: dict = {
             'bool': ir.IntType(1),
             'int': ir.IntType(32),
+            'int64': ir.IntType(64),
             'float': ir.FloatType(),
             'double': ir.DoubleType(),
             'void': ir.VoidType(),
@@ -88,8 +89,9 @@ class Compiler:
     def __visit_let_statement(self, node: LetStatement) -> None:
         name: str = node.name.value
         value: Expression = node.value
+        value_type: str = node.value_type
 
-        value, Type = self.__resolve_value(node=value)
+        value, Type = self.__resolve_value(node=value, value_type=value_type)
 
         if not self.variables.__contains__(name):
             # Creating a pointer for the type 'Type' : ir.Type
@@ -125,14 +127,10 @@ class Compiler:
         param_names: list[str] = [p.value for p in params]
 
         # Keep track of the types for each parameter
-        # TODO: ALLOW MORE PARAM TYPES OTHER THAN INT
-        param_types: list[ir.Type] = [self.type_map['float'] for p in params]
+        param_types: list[ir.Type] = [self.type_map[p.value_type] for p in params]
 
         # TODO: Function's return type (ALLOW MORE RETURN TYPES FROM FUNCTIONS, RN ITS JUST INTS)
-        return_type: ir.Type = self.type_map['void']
-        for stmt in body.statements:
-            if stmt.type() == 'ReturnStatement':
-                return_type = self.type_map['int']
+        return_type: ir.Type = self.type_map[node.return_type]
         
         # Defining the function's (return_type, params_type)
         fnty = ir.FunctionType(return_type, param_types)
@@ -344,17 +342,17 @@ class Compiler:
     # endregion
         
     # region Helper Methods
-    def __resolve_value(self, node: Expression) -> tuple[ir.Value, ir.Type]:
+    def __resolve_value(self, node: Expression, value_type: str = None) -> tuple[ir.Value, ir.Type]:
         """ Resolves a value and returns a tuple (ir_value, ir_type) """
         match node.type():
             # Literal Values
             case "IntegerLiteral":
                 node: IntegerLiteral = node
-                value, Type = node.value, self.type_map['int']
+                value, Type = node.value, self.type_map['int' if value_type is None else value_type]
                 return ir.Constant(Type, value), Type
             case "FloatLiteral":
                 node: FloatLiteral = node
-                value, Type = node.value, self.type_map['float']
+                value, Type = node.value, self.type_map['float' if value_type is None else value_type]
                 return ir.Constant(Type, value), Type
             case "StringLiteral":
                 node: StringLiteral = node

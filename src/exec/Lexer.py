@@ -45,7 +45,13 @@ class Lexer:
             case '+':
                 tok = self.__new_token(TokenType.PLUS, self.current_char)
             case '-':
-                tok = self.__new_token(TokenType.MINUS, self.current_char)
+                # Handle '=>'
+                if self.__peek_char() == '>':
+                    ch = self.current_char
+                    self.__read_char()
+                    tok = self.__new_token(TokenType.ARROW, ch + self.current_char)
+                else:
+                    tok = self.__new_token(TokenType.MINUS, self.current_char)
             case '*':
                 tok = self.__new_token(TokenType.ASTERISK, self.current_char)
             case '/':
@@ -176,7 +182,7 @@ class Lexer:
             
     def __read_identifier(self) -> str:
         position = self.position
-        while self.__is_letter(self.current_char):
+        while self.__is_letter(self.current_char) or self.current_char.isalnum():
             self.__read_char()
         
         return self.source[position:self.position]

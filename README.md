@@ -8,8 +8,8 @@ Normal language keywords have alternates for the gen z people to feel safe.
 - `if/else` -> `sus/imposter`
 ```js
 // Example GenZ Approved Program
-bruh main() {
-    lit a be 25 rn
+bruh main() -> int {
+    lit a: int be 25 rn
 
     sus a == 25 {
         printf("oh boi") rn
@@ -28,30 +28,32 @@ bruh main() {
 ## Features so far
 - Every program must have a `main` function defined and it must return an integer code
 ```
-fn main() {
+fn main() -> int {
     return 1;
 }
 ```
 
 - Datatypes
-    - int, float, string
+    - int
+    - float
+    - str
 
 - Function Definitions + Function Calling
-    - **TEMP** Only i32 data types are allowed to be passed in as parameters and return values for functions
+    - **TEMP** Strings are not allowed to be returned from functions. Working out a bug here
 ```
-fn add(a, b) {
+fn add(a: int, b: int) -> int {
     return a + b;
 }
 
-fn main() {
+fn main() -> int {
     return add(1, 2);
 }
 ```
 
 - Variable Assignment + Re-assignment
 ```
-fn main() {
-    let a = 25;
+fn main() -> int {
+    let a: int = 25;
     a = 5;
 
     return a;
@@ -60,8 +62,8 @@ fn main() {
 
 - Basic Arithmetic (+-*/)
 ```
-fn main() {
-    let a = 1 + 2 - 3 * 4 / (4 - 2);
+fn main() -> int {
+    let a: float = 1 + 2 - 3 * 4 / (4 - 2);
 
     return a;
 }
@@ -70,7 +72,7 @@ fn main() {
 - Built-in Functions
     - `printf` (C-like printf function)
 ```
-fn main() {
+fn main() -> int {
     printf("I have %i apples..", 69);
     
     return 1;
@@ -80,8 +82,8 @@ fn main() {
 - Loops
     - While Loops
 ```
-fn main() {
-    let a = 25;
+fn main() -> int {
+    let a: int = 25;
 
     while a < 50 {
         a = a + 1;
@@ -94,8 +96,8 @@ fn main() {
 
 - Conditionals
 ```
-fn main() {
-    let a = 0;
+fn main() -> int {
+    let a: int = 0;
 
     if a == 0 {
         printf("A BE ZERO");
