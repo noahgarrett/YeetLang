@@ -1,4 +1,4 @@
-fn main(a: int, b: float) -> int {
+fn main() -> int {
     c = 4
     return 1
 }
