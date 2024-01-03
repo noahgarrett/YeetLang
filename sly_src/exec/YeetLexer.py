@@ -100,6 +100,10 @@ class YeetLexer(Lexer):
 
     # GenZ Safe Words
     IDENT['bruh'] = FN
+    IDENT['sus'] = IF
+    IDENT['imposter'] = ELSE
+    IDENT['pause'] = RETURN
+    IDENT['be'] = EQ 
 
     # Other Token Definitions
     # STRING = r'(\".*?\")|(\'.*?\')'
