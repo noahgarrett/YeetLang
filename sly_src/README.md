@@ -1,3 +1,6 @@
+# Language Spec
+
+```cpp
 # As of right now, functions cannot return strings.
 
 
@@ -41,3 +44,4 @@ fn main() -> int {
     # Return Statements
     return 1
 }
+```
