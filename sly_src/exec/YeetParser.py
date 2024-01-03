@@ -2,7 +2,8 @@ from sly import Parser
 from exec.YeetLexer import YeetLexer
 
 from models.YeetAST import Program
-from models.YeetAST import ReturnStatement, FunctionStatement, AssignStatement, CallStatement
+from models.YeetAST import ReturnStatement, FunctionStatement, AssignStatement, CallStatement, IfStatement, WhileStatement
+from models.YeetAST import ForStatement, BreakStatement, ContinueStatement
 from models.YeetAST import BinaryExpression
 from models.YeetAST import IdentifierLiteral, IntegerLiteral, FloatLiteral, StringLiteral
 from models.YeetAST import FunctionParam
@@ -37,6 +38,14 @@ class YeetParser(Parser):
     def statement(self, p):
         return ReturnStatement(p.expr)
     
+    @_("BREAK")
+    def statement(self, p):
+        return BreakStatement(temp=True)
+    
+    @_("CONTINUE")
+    def statement(self, p):
+        return ContinueStatement(temp=True)
+    
     @_('FN IDENT LPAREN fn_params RPAREN ARROW IDENT LBRACE statements RBRACE')
     def statement(self, p):
         return FunctionStatement(
@@ -45,18 +54,38 @@ class YeetParser(Parser):
             body=p.statements,
             params=p.fn_params if p.fn_params else []
         )
+    
+    @_('FOR statement SEMICOLON expr SEMICOLON statement LBRACE statements RBRACE')
+    def statement(self, p):
+        return ForStatement(
+            assign_statement=p.statement0,
+            condition=p.expr,
+            step=p.statement1,
+            true_body=p.statements
+        )
 
-    # @_('IF expr LBRACE statements RBRACE')
-    # def statement(self, p):
-    #     pass
+    @_('IF expr LBRACE statements RBRACE')
+    def statement(self, p):
+        return IfStatement(
+            condition=p.expr,
+            true_body=p.statements,
+            else_body=[]
+        )
     
-    # @_('IF expr LBRACE statements RBRACE ELSE LBRACE statements RBRACE')
-    # def statement(self, p):
-    #     pass
+    @_('IF expr LBRACE statements RBRACE ELSE LBRACE statements RBRACE')
+    def statement(self, p):
+        return IfStatement(
+            condition=p.expr,
+            true_body=p.statements0,
+            else_body=p.statements1
+        )
     
-    # @_('WHILE expr LBRACE statements RBRACE')
-    # def statement(self, p):
-    #     pass
+    @_('WHILE expr LBRACE statements RBRACE')
+    def statement(self, p):
+        return WhileStatement(
+            condition=p.expr,
+            true_body=p.statements
+        )
     
     @_('IDENT EQ expr')
     def statement(self, p):

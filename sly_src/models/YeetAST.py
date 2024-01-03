@@ -24,6 +24,27 @@ class AssignStatement(NamedTuple):
 class CallStatement(NamedTuple):
     name: str
     params: List
+
+class IfStatement(NamedTuple):
+    condition: Any
+    true_body: Any
+    else_body: Any
+
+class WhileStatement(NamedTuple):
+    condition: Any
+    true_body: Any
+
+class ForStatement(NamedTuple):
+    assign_statement: AssignStatement
+    condition: Any
+    step: Any
+    true_body: Any
+
+class BreakStatement(NamedTuple):
+    temp: Any
+
+class ContinueStatement(NamedTuple):
+    temp: Any
 # endregion
         
 # region Expressions

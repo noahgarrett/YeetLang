@@ -55,7 +55,6 @@ class YeetLexer(Lexer):
         ARROW,
 
         # Keywords
-        LET,
         IF,
         ELIF,
         ELSE,
@@ -87,7 +86,6 @@ class YeetLexer(Lexer):
 
     # Keyword Declarations
     IDENT = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    IDENT['let'] = LET
     IDENT['if'] = IF
     IDENT['elif'] = ELIF
     IDENT['else'] = ELSE
@@ -100,8 +98,12 @@ class YeetLexer(Lexer):
     IDENT['and'] = AND
     IDENT['or'] = OR
 
+    # GenZ Safe Words
+    IDENT['bruh'] = FN
+
     # Other Token Definitions
-    STRING = r'(\".*?\")|(\'.*?\')'
+    # STRING = r'(\".*?\")|(\'.*?\')'
+    STRING = r'(\"(?:\\\"|[^\"])*\"|\'.*?\')'
     GTE = r'>='
     GT = r'>'
     LTE = r'<='
@@ -123,11 +125,12 @@ class YeetLexer(Lexer):
     MODULUS = r'%'
     COLON = r':'
     COMMA = r','
+    SEMICOLON = r';'
 
     @_(r'#.*')
     def COMMENT(self, t):
         pass
 
     def error(self, t):
-        print(f'Illegal Character {t.value[0]}, in Line {self.lineno}, Column {self.index}')
+        print(f'[LEXER] Illegal Character {t.value[0]}, in Line {self.lineno}, Column {self.index}')
         exit(1)
